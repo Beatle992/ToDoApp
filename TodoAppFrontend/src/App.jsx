@@ -46,7 +46,7 @@ export default function App() {
       },
       body: JSON.stringify(todo),
     })
-
+    console.log(todo);
     setTitle('')
     setDueDate('')
 
