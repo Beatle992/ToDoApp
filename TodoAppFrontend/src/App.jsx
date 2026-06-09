@@ -35,7 +35,7 @@ export default function App() {
       completed: false,
       priority: 1,
       createdAt: new Date().toISOString(),
-      dueDate: dueDate || null,
+      dueDate: dueDate,
       groupName,
     }
 
