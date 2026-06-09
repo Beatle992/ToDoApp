@@ -24,5 +24,5 @@ public class Todo
     public DateTime? DueDate { get; set; }
 
     [Column("group_name")]
-    public string GroupName { get; set; } = "Inbox";
+    public string GroupName { get; set; } ;
 }
