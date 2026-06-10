@@ -11,6 +11,7 @@ export default function App() {
   const [selectedGroup, setSelectedGroup] = useState('All')
   const [newGroup, setNewGroup] = useState('')
   const [openMenu, setOpenMenu] = useState(null)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const defaultGroups = ['Inbox', 'Work', 'Personal']
   const [groups, setGroups] = useState(defaultGroups)
@@ -46,11 +47,11 @@ export default function App() {
       },
       body: JSON.stringify(todo),
     })
-    console.log(todo);
+
     setTitle('')
     setDueDate('')
-
     loadTodos()
+    setSidebarOpen(false)
   }
 
   async function toggleTodo(todo) {
@@ -132,7 +133,17 @@ export default function App() {
 
   return (
     <div className="app">
-      <aside className="sidebar">
+
+      {/* Hamburger Button */}
+      <button
+        className="menu-toggle"
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+      >
+        ☰
+      </button>
+
+      {/* Sidebar */}
+      <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <h2>My Lists</h2>
 
         {allGroups.map((group) => (
@@ -141,7 +152,10 @@ export default function App() {
               className={
                 selectedGroup === group ? 'group active' : 'group'
               }
-              onClick={() => setSelectedGroup(group)}
+              onClick={() => {
+                setSelectedGroup(group)
+                setSidebarOpen(false)
+              }}
             >
               {group}
             </button>
@@ -159,9 +173,7 @@ export default function App() {
 
                 {openMenu === group && (
                   <div className="menu-dropdown">
-                    <button
-                      onClick={() => deleteGroup(group)}
-                    >
+                    <button onClick={() => deleteGroup(group)}>
                       Delete Group
                     </button>
                   </div>
@@ -181,6 +193,7 @@ export default function App() {
         </form>
       </aside>
 
+      {/* Content */}
       <main className="content">
         <h1>{selectedGroup}</h1>
 
@@ -228,16 +241,12 @@ export default function App() {
               </button>
 
               <div className="todo-content">
-                <div className="todo-title">
-                  {todo.title}
-                </div>
+                <div className="todo-title">{todo.title}</div>
 
                 <div className="todo-meta">
                   {todo.groupName || 'Inbox'}
                   {todo.dueDate &&
-                    ` • ${new Date(
-                      todo.dueDate
-                    ).toLocaleString()}`}
+                    ` • ${new Date(todo.dueDate).toLocaleString()}`}
                 </div>
               </div>
 
