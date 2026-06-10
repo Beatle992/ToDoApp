@@ -18,37 +18,52 @@ public class TodosController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        return Ok(await _service.GetAll());
+        var todos = await _service.GetAll();
+        return Ok(todos);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
         var todo = await _service.GetById(id);
-        if (todo == null) return NotFound();
+
+        if (todo == null)
+            return NotFound();
+
         return Ok(todo);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(Todo todo)
+    public async Task<IActionResult> Create([FromBody] Todo todo)
     {
         var created = await _service.Create(todo);
-        return Ok(created);
+
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = created.Id },
+            created
+        );
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, Todo todo)
+    public async Task<IActionResult> Update(int id, [FromBody] Todo todo)
     {
-        var ok = await _service.Update(id, todo);
-        if (!ok) return NotFound();
-        return Ok();
+        var updated = await _service.Update(id, todo);
+
+        if (!updated)
+            return NotFound();
+
+        return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var ok = await _service.Delete(id);
-        if (!ok) return NotFound();
-        return Ok();
+        var deleted = await _service.Delete(id);
+
+        if (!deleted)
+            return NotFound();
+
+        return NoContent();
     }
 }
