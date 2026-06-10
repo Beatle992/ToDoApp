@@ -5,9 +5,12 @@ const API = 'http://100.90.164.103:5000/api/todos'
 
 export default function App() {
   const [todos, setTodos] = useState([])
+  const [view, setView] = useState('list') // 👈 NEW PAGE STATE
+
   const [title, setTitle] = useState('')
   const [dueDate, setDueDate] = useState('')
   const [groupName, setGroupName] = useState('Inbox')
+
   const [selectedGroup, setSelectedGroup] = useState('All')
   const [newGroup, setNewGroup] = useState('')
   const [openMenu, setOpenMenu] = useState(null)
@@ -48,8 +51,8 @@ export default function App() {
 
     setTitle('')
     setDueDate('')
+    setView('list') // 👈 go back after adding
     loadTodos()
-    setSidebarOpen(false)
   }
 
   async function toggleTodo(todo) {
@@ -114,46 +117,32 @@ export default function App() {
   return (
     <div className="app">
 
-      {/* Hamburger */}
-      <button
-        className="menu-toggle"
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-      >
-        ☰
-      </button>
-
       {/* SIDEBAR */}
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <h2>My Lists</h2>
 
-        {/* ADD TODO MOVED HERE */}
-        <form className="todo-form" onSubmit={addTodo}>
-          <input
-            type="text"
-            placeholder="Add a task..."
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
+        {/* NAVIGATION */}
+        <button
+          className="group"
+          onClick={() => {
+            setView('list')
+            setSidebarOpen(false)
+          }}
+        >
+          📋 Tasks
+        </button>
 
-          <input
-            type="datetime-local"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-          />
+        <button
+          className="group"
+          onClick={() => {
+            setView('add')
+            setSidebarOpen(false)
+          }}
+        >
+          ➕ Add Todo
+        </button>
 
-          <select
-            value={groupName}
-            onChange={(e) => setGroupName(e.target.value)}
-          >
-            {groups.map((group) => (
-              <option key={group} value={group}>
-                {group}
-              </option>
-            ))}
-          </select>
-
-          <button type="submit">Add</button>
-        </form>
+        <hr style={{ border: '1px solid #1f2937', width: '100%' }} />
 
         {/* GROUPS */}
         {allGroups.map((group) => (
@@ -164,6 +153,7 @@ export default function App() {
               }
               onClick={() => {
                 setSelectedGroup(group)
+                setView('list') // always go to list view
                 setSidebarOpen(false)
               }}
             >
@@ -204,42 +194,84 @@ export default function App() {
         </form>
       </aside>
 
-      {/* CONTENT ONLY SHOWS TODOS NOW */}
+      {/* CONTENT */}
       <main className="content">
-        <h1>{selectedGroup}</h1>
 
-        <div className="todo-list">
-          {filteredTodos.map((todo) => (
-            <div
-              key={todo.id}
-              className={todo.completed ? 'todo completed' : 'todo'}
-            >
-              <button
-                className="check-btn"
-                onClick={() => toggleTodo(todo)}
-              >
-                {todo.completed ? '✓' : '○'}
-              </button>
+        {/* LIST PAGE */}
+        {view === 'list' && (
+          <>
+            <h1>{selectedGroup}</h1>
 
-              <div className="todo-content">
-                <div className="todo-title">{todo.title}</div>
+            <div className="todo-list">
+              {filteredTodos.map((todo) => (
+                <div
+                  key={todo.id}
+                  className={todo.completed ? 'todo completed' : 'todo'}
+                >
+                  <button
+                    className="check-btn"
+                    onClick={() => toggleTodo(todo)}
+                  >
+                    {todo.completed ? '✓' : '○'}
+                  </button>
 
-                <div className="todo-meta">
-                  {todo.groupName || 'Inbox'}
-                  {todo.dueDate &&
-                    ` • ${new Date(todo.dueDate).toLocaleString()}`}
+                  <div className="todo-content">
+                    <div className="todo-title">{todo.title}</div>
+
+                    <div className="todo-meta">
+                      {todo.groupName || 'Inbox'}
+                      {todo.dueDate &&
+                        ` • ${new Date(todo.dueDate).toLocaleString()}`}
+                    </div>
+                  </div>
+
+                  <button
+                    className="delete-btn"
+                    onClick={() => deleteTodo(todo.id)}
+                  >
+                    ✕
+                  </button>
                 </div>
-              </div>
-
-              <button
-                className="delete-btn"
-                onClick={() => deleteTodo(todo.id)}
-              >
-                ✕
-              </button>
+              ))}
             </div>
-          ))}
-        </div>
+          </>
+        )}
+
+        {/* ADD PAGE */}
+        {view === 'add' && (
+          <>
+            <h1>Add New Todo</h1>
+
+            <form className="todo-form" onSubmit={addTodo}>
+              <input
+                type="text"
+                placeholder="Task title..."
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+
+              <input
+                type="datetime-local"
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+              />
+
+              <select
+                value={groupName}
+                onChange={(e) => setGroupName(e.target.value)}
+              >
+                {groups.map((group) => (
+                  <option key={group} value={group}>
+                    {group}
+                  </option>
+                ))}
+              </select>
+
+              <button type="submit">Create Todo</button>
+            </form>
+          </>
+        )}
+
       </main>
     </div>
   )
