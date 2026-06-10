@@ -9,10 +9,9 @@ export default function App() {
   // pages
   const [view, setView] = useState('list')
 
-  // form
+  // form state (ONLY what we need now)
   const [title, setTitle] = useState('')
   const [dueDate, setDueDate] = useState('')
-  const [groupName, setGroupName] = useState('Inbox')
 
   // UI state
   const [selectedGroup, setSelectedGroup] = useState('All')
@@ -33,6 +32,7 @@ export default function App() {
     loadTodos()
   }, [])
 
+  // ✅ FIXED: group now depends ONLY on selectedGroup
   async function addTodo(e) {
     e.preventDefault()
 
@@ -44,7 +44,11 @@ export default function App() {
       priority: 1,
       createdAt: new Date().toISOString(),
       dueDate,
-      groupName,
+
+      groupName:
+        selectedGroup !== 'All' && selectedGroup !== 'Completed'
+          ? selectedGroup
+          : 'Inbox',
     }
 
     await fetch(API, {
@@ -57,6 +61,7 @@ export default function App() {
     setDueDate('')
     setView('list')
     setSidebarOpen(false)
+
     loadTodos()
   }
 
@@ -276,9 +281,14 @@ export default function App() {
                 onChange={(e) => setDueDate(e.target.value)}
               />
 
+              {/* ✅ FIXED: now only shows groups */}
               <select
-                value={groupName}
-                onChange={(e) => setGroupName(e.target.value)}
+                value={
+                  selectedGroup !== 'All' && selectedGroup !== 'Completed'
+                    ? selectedGroup
+                    : 'Inbox'
+                }
+                onChange={(e) => setSelectedGroup(e.target.value)}
               >
                 {groups.map((group) => (
                   <option key={group} value={group}>
