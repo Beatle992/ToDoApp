@@ -36,16 +36,21 @@ public class TodoService
         return true;
     }
 
-    public async Task<bool> Update(int id, Todo updated)
+    public async Task<Todo?> Update(int id, Todo updated)
     {
         var todo = await _db.Todos.FindAsync(id);
-        if (todo == null) return false;
-
+    
+        if (todo == null)
+            return null;
+    
         todo.Title = updated.Title;
         todo.Completed = updated.Completed;
         todo.Priority = updated.Priority;
-
+        todo.GroupName = updated.GroupName;
+        todo.DueDate = updated.DueDate;
+    
         await _db.SaveChangesAsync();
-        return true;
+    
+        return todo;
     }
 }
