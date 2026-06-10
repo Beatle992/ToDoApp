@@ -18,8 +18,7 @@ public class TodosController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var todos = await _service.GetAll();
-        return Ok(todos);
+        return Ok(await _service.GetAll());
     }
 
     [HttpGet("{id}")]
@@ -50,10 +49,10 @@ public class TodosController : ControllerBase
     {
         var updated = await _service.Update(id, todo);
 
-        if (!updated)
+        if (updated == null)
             return NotFound();
 
-        return NoContent();
+        return Ok(updated);
     }
 
     [HttpDelete("{id}")]
