@@ -19,7 +19,7 @@ export default function App() {
   const [openMenu, setOpenMenu] = useState(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
-  const defaultGroups = ['Inbox', 'Work', 'Personal']
+  const defaultGroups = ['Inbox']
   const [groups, setGroups] = useState(defaultGroups)
 
   async function loadTodos() {
@@ -32,7 +32,6 @@ export default function App() {
     loadTodos()
   }, [])
 
-  // ✅ FIXED: group now depends ONLY on selectedGroup
   async function addTodo(e) {
     e.preventDefault()
 
@@ -148,7 +147,7 @@ export default function App() {
         <h2>My Lists</h2>
 
         {/* NAV */}
-        <button
+        <p
           className="group"
           onClick={() => {
             setView('list')
@@ -156,7 +155,7 @@ export default function App() {
           }}
         >
           📋 Tasks
-        </button>
+        </p>
 
         <button
           className="group"
