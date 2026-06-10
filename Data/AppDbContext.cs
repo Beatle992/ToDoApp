@@ -13,3 +13,12 @@ public class AppDbContext : DbContext
     public DbSet<Todo> Todos => Set<Todo>();
     public DbSet<User> Users => Set<User>();
 }
+
+protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    modelBuilder.Entity<Todo>()
+        .HasOne<User>()
+        .WithMany(u => u.Todos)
+        .HasForeignKey(t => t.UserId)
+        .OnDelete(DeleteBehavior.Cascade);
+}
