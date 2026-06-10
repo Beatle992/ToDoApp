@@ -9,9 +9,10 @@ export default function App() {
   // pages
   const [view, setView] = useState('list')
 
-  // form state (ONLY what we need now)
+  // form state
   const [title, setTitle] = useState('')
   const [dueDate, setDueDate] = useState('')
+  const [formGroup, setFormGroup] = useState('')
 
   // UI state
   const [selectedGroup, setSelectedGroup] = useState('All')
@@ -19,7 +20,7 @@ export default function App() {
   const [openMenu, setOpenMenu] = useState(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
-  const defaultGroups = ['Inbox','Personal']
+  const defaultGroups = ['Inbox', 'Personal']
   const [groups, setGroups] = useState(defaultGroups)
 
   async function loadTodos() {
@@ -31,6 +32,12 @@ export default function App() {
   useEffect(() => {
     loadTodos()
   }, [])
+
+  // ✅ single source of truth for group assignment
+  const activeGroup =
+    selectedGroup !== 'All' && selectedGroup !== 'Completed'
+      ? selectedGroup
+      : groups[0]
 
   async function addTodo(e) {
     e.preventDefault()
@@ -44,10 +51,8 @@ export default function App() {
       createdAt: new Date().toISOString(),
       dueDate,
 
-      groupName:
-        selectedGroup !== 'All' && selectedGroup !== 'Completed'
-          ? selectedGroup
-          : '',
+      // ✅ ALWAYS real group, NEVER Inbox fallback logic
+      groupName: formGroup || activeGroup,
     }
 
     await fetch(API, {
@@ -58,6 +63,7 @@ export default function App() {
 
     setTitle('')
     setDueDate('')
+    setFormGroup('')
     setView('list')
     setSidebarOpen(false)
 
@@ -71,7 +77,6 @@ export default function App() {
       body: JSON.stringify({
         ...todo,
         completed: !todo.completed,
-        groupName: !todo.completed ? 'Completed' : 'Inbox',
       }),
     })
 
@@ -146,7 +151,6 @@ export default function App() {
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <h2>My Lists</h2>
 
-        {/* NAV */}
         <p
           className="group"
           onClick={() => {
@@ -162,6 +166,9 @@ export default function App() {
           onClick={() => {
             setView('add')
             setSidebarOpen(false)
+
+            // default group for form
+            setFormGroup(activeGroup)
           }}
         >
           ➕ Add Todo
@@ -281,12 +288,8 @@ export default function App() {
               />
 
               <select
-                value={
-                  selectedGroup !== 'All' && selectedGroup !== 'Completed'
-                    ? selectedGroup
-                    : ''
-                }
-                onChange={(e) => setSelectedGroup(e.target.value)}
+                value={formGroup}
+                onChange={(e) => setFormGroup(e.target.value)}
               >
                 {groups.map((group) => (
                   <option key={group} value={group}>
