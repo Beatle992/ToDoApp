@@ -35,13 +35,14 @@ public class TodosController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] Todo todo)
     {
-        var created = await _service.Create(todo);
         Console.WriteLine($"RECEIVED GROUP: {todo.GroupName}");
+    
+        var created = await _service.Create(todo);
+    
         return CreatedAtAction(
             nameof(GetById),
             new { id = created.Id },
             created
-            Console.WriteLine($"RECEIVED GROUP: {todo.GroupName}");
         );
     }
 
