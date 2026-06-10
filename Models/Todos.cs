@@ -25,4 +25,7 @@ public class Todo
 
     [Column("group_name")]
     public string GroupName { get; set; } ;
+
+    [Column("User ID")]
+    public int UserId { get; set; }
 }
