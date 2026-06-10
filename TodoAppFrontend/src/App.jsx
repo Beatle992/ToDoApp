@@ -36,15 +36,13 @@ export default function App() {
       completed: false,
       priority: 1,
       createdAt: new Date().toISOString(),
-      dueDate: dueDate,
+      dueDate,
       groupName,
     }
 
     await fetch(API, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(todo),
     })
 
@@ -55,17 +53,13 @@ export default function App() {
   }
 
   async function toggleTodo(todo) {
-    const isCompleting = !todo.completed
-
     await fetch(`${API}/${todo.id}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         ...todo,
-        completed: isCompleting,
-        groupName: isCompleting ? 'Completed' : 'Inbox',
+        completed: !todo.completed,
+        groupName: !todo.completed ? 'Completed' : 'Inbox',
       }),
     })
 
@@ -73,10 +67,7 @@ export default function App() {
   }
 
   async function deleteTodo(id) {
-    await fetch(`${API}/${id}`, {
-      method: 'DELETE',
-    })
-
+    await fetch(`${API}/${id}`, { method: 'DELETE' })
     loadTodos()
   }
 
@@ -84,7 +75,6 @@ export default function App() {
     e.preventDefault()
 
     const trimmed = newGroup.trim()
-
     if (!trimmed) return
     if (groups.includes(trimmed)) return
 
@@ -96,9 +86,7 @@ export default function App() {
     setGroups(groups.filter((g) => g !== group))
     setOpenMenu(null)
 
-    if (selectedGroup === group) {
-      setSelectedGroup('All')
-    }
+    if (selectedGroup === group) setSelectedGroup('All')
   }
 
   const allGroups = useMemo(() => {
@@ -110,17 +98,9 @@ export default function App() {
       .filter((todo) => {
         const group = todo.groupName || 'Inbox'
 
-        if (selectedGroup === 'Completed') {
-          return todo.completed
-        }
-
-        if (todo.completed) {
-          return false
-        }
-
-        if (selectedGroup === 'All') {
-          return true
-        }
+        if (selectedGroup === 'Completed') return todo.completed
+        if (todo.completed) return false
+        if (selectedGroup === 'All') return true
 
         return group === selectedGroup
       })
@@ -134,7 +114,7 @@ export default function App() {
   return (
     <div className="app">
 
-      {/* Hamburger Button */}
+      {/* Hamburger */}
       <button
         className="menu-toggle"
         onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -142,10 +122,40 @@ export default function App() {
         ☰
       </button>
 
-      {/* Sidebar */}
+      {/* SIDEBAR */}
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <h2>My Lists</h2>
 
+        {/* ADD TODO MOVED HERE */}
+        <form className="todo-form" onSubmit={addTodo}>
+          <input
+            type="text"
+            placeholder="Add a task..."
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+
+          <input
+            type="datetime-local"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+          />
+
+          <select
+            value={groupName}
+            onChange={(e) => setGroupName(e.target.value)}
+          >
+            {groups.map((group) => (
+              <option key={group} value={group}>
+                {group}
+              </option>
+            ))}
+          </select>
+
+          <button type="submit">Add</button>
+        </form>
+
+        {/* GROUPS */}
         {allGroups.map((group) => (
           <div key={group} className="group-row">
             <button
@@ -183,6 +193,7 @@ export default function App() {
           </div>
         ))}
 
+        {/* ADD GROUP */}
         <form className="group-form" onSubmit={addGroup}>
           <input
             placeholder="New group..."
@@ -193,45 +204,15 @@ export default function App() {
         </form>
       </aside>
 
-      {/* Content */}
+      {/* CONTENT ONLY SHOWS TODOS NOW */}
       <main className="content">
         <h1>{selectedGroup}</h1>
-
-        <form className="todo-form" onSubmit={addTodo}>
-          <input
-            type="text"
-            placeholder="Add a task..."
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-
-          <input
-            type="datetime-local"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-          />
-
-          <select
-            value={groupName}
-            onChange={(e) => setGroupName(e.target.value)}
-          >
-            {groups.map((group) => (
-              <option key={group} value={group}>
-                {group}
-              </option>
-            ))}
-          </select>
-
-          <button type="submit">Add</button>
-        </form>
 
         <div className="todo-list">
           {filteredTodos.map((todo) => (
             <div
               key={todo.id}
-              className={
-                todo.completed ? 'todo completed' : 'todo'
-              }
+              className={todo.completed ? 'todo completed' : 'todo'}
             >
               <button
                 className="check-btn"
