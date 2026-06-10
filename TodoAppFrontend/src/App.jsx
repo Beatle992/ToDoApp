@@ -19,7 +19,7 @@ export default function App() {
   const [openMenu, setOpenMenu] = useState(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
-  const defaultGroups = ['Inbox']
+  const defaultGroups = ['Inbox','Personal']
   const [groups, setGroups] = useState(defaultGroups)
 
   async function loadTodos() {
@@ -47,7 +47,7 @@ export default function App() {
       groupName:
         selectedGroup !== 'All' && selectedGroup !== 'Completed'
           ? selectedGroup
-          : 'Inbox',
+          : '',
     }
 
     await fetch(API, {
@@ -185,7 +185,7 @@ export default function App() {
               {group}
             </button>
 
-            {!['All', 'Inbox', 'Completed'].includes(group) && (
+            {!['All', 'Inbox', 'Personal', 'Completed'].includes(group) && (
               <div className="group-menu-wrapper">
                 <button
                   className="menu-btn"
@@ -280,12 +280,11 @@ export default function App() {
                 onChange={(e) => setDueDate(e.target.value)}
               />
 
-              {/* ✅ FIXED: now only shows groups */}
               <select
                 value={
                   selectedGroup !== 'All' && selectedGroup !== 'Completed'
                     ? selectedGroup
-                    : 'Inbox'
+                    : ''
                 }
                 onChange={(e) => setSelectedGroup(e.target.value)}
               >
