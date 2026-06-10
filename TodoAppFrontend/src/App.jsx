@@ -5,12 +5,16 @@ const API = 'http://100.90.164.103:5000/api/todos'
 
 export default function App() {
   const [todos, setTodos] = useState([])
-  const [view, setView] = useState('list') // 👈 NEW PAGE STATE
 
+  // pages
+  const [view, setView] = useState('list')
+
+  // form
   const [title, setTitle] = useState('')
   const [dueDate, setDueDate] = useState('')
   const [groupName, setGroupName] = useState('Inbox')
 
+  // UI state
   const [selectedGroup, setSelectedGroup] = useState('All')
   const [newGroup, setNewGroup] = useState('')
   const [openMenu, setOpenMenu] = useState(null)
@@ -51,7 +55,8 @@ export default function App() {
 
     setTitle('')
     setDueDate('')
-    setView('list') // 👈 go back after adding
+    setView('list')
+    setSidebarOpen(false)
     loadTodos()
   }
 
@@ -117,11 +122,27 @@ export default function App() {
   return (
     <div className="app">
 
+      {/* OVERLAY */}
+      {sidebarOpen && (
+        <div
+          className="sidebar-overlay"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* BURGER */}
+      <button
+        className="menu-toggle"
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+      >
+        ☰
+      </button>
+
       {/* SIDEBAR */}
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <h2>My Lists</h2>
 
-        {/* NAVIGATION */}
+        {/* NAV */}
         <button
           className="group"
           onClick={() => {
@@ -153,7 +174,7 @@ export default function App() {
               }
               onClick={() => {
                 setSelectedGroup(group)
-                setView('list') // always go to list view
+                setView('list')
                 setSidebarOpen(false)
               }}
             >
@@ -217,7 +238,6 @@ export default function App() {
 
                   <div className="todo-content">
                     <div className="todo-title">{todo.title}</div>
-
                     <div className="todo-meta">
                       {todo.groupName || 'Inbox'}
                       {todo.dueDate &&
@@ -240,7 +260,7 @@ export default function App() {
         {/* ADD PAGE */}
         {view === 'add' && (
           <>
-            <h1>Add New Todo</h1>
+            <h1>Add Todo</h1>
 
             <form className="todo-form" onSubmit={addTodo}>
               <input
@@ -267,7 +287,7 @@ export default function App() {
                 ))}
               </select>
 
-              <button type="submit">Create Todo</button>
+              <button type="submit">Create</button>
             </form>
           </>
         )}
