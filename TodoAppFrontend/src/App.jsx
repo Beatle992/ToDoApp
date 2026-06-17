@@ -4,7 +4,7 @@ import './App.css'
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
 // Change this to match wherever your API is running.
 // If the frontend is served from the same origin as the API you can use '/api/todos'.
-const API = 'http://localhost:5000/api/todos'
+const API = 'http://192.168.8.224:5173/'
 
 const DEFAULT_GROUPS = ['Inbox', 'Personal']
 const GROUPS_KEY = 'todo-app-groups'
