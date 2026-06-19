@@ -1,115 +1,155 @@
-/* ===========================
-   BASE
-   =========================== */
+/* =====================================================
+   TOKENS
+   A paper ledger, not a dashboard. Warm, daylight, tactile.
+   ===================================================== */
 
 :root {
-  --bg-page:      #0f172a;
-  --bg-sidebar:   #0b1220;
-  --bg-card:      #111827;
-  --bg-input:     #1e293b;
-  --bg-hover:     #334155;
-  --border:       #1f2937;
-  --border-hover: #334155;
-  --text-primary: #e2e8f0;
-  --text-muted:   #94a3b8;
-  --text-dim:     #cbd5e1;
-  --accent:       #3b82f6;
-  --accent-hover: #2563eb;
-  --danger:       #ef4444;
-  --radius-sm:    8px;
-  --radius-md:    12px;
-  --radius-lg:    16px;
-  --sidebar-w:    260px;
+  /* color */
+  --paper:        #FAF7F0;
+  --paper-raised: #F2EDE0;
+  --ink:          #1C1917;
+  --ink-soft:     #57534E;
+  --ink-faint:    #A39E92;
+  --rule:         #DDD5C2;
+  --rule-strong:  #C7BCA1;
+  --pencil:       #8B6F47;
+  --pencil-deep:  #6B5436;
+  --pencil-wash:  #EFE6D3;
+  --terracotta:   #C4634A;
+  --terracotta-wash: #F5E3DD;
+
+  /* type */
+  --font-display: 'Source Serif 4', 'Iowan Old Style', Georgia, serif;
+  --font-body:    'Source Serif 4', Georgia, serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* shape */
+  --radius-sm: 4px;
+  --radius-md: 7px;
+  --radius-lg: 3px; /* deliberately near-square — paper, not app chrome */
+  --rail-w: 248px;
+
+  /* motion */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+* { box-sizing: border-box; }
 
 html, body, #root {
   height: 100%;
   margin: 0;
   padding: 0;
-  background: var(--bg-page);
-  color: var(--text-primary);
+  background: var(--paper);
+  color: var(--ink);
 }
 
-/* ===========================
-   APP SHELL
-   =========================== */
+body {
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
 
+::selection {
+  background: var(--pencil-wash);
+  color: var(--pencil-deep);
+}
+
+:focus-visible {
+  outline: 2px solid var(--pencil);
+  outline-offset: 2px;
+}
+
+/* faint paper grain via layered gradient, no image asset needed */
 .app {
   display: flex;
   min-height: 100vh;
-  background: var(--bg-page);
+  background:
+    radial-gradient(circle at 1px 1px, rgba(28,25,23,0.035) 1px, transparent 0) 0 0/14px 14px,
+    var(--paper);
 }
 
-/* ===========================
-   SIDEBAR
-   =========================== */
+/* =====================================================
+   SIDEBAR — the spine of the notebook
+   ===================================================== */
 
 .sidebar {
-  width: var(--sidebar-w);
+  width: var(--rail-w);
   flex-shrink: 0;
-  background: var(--bg-sidebar);
-  border-right: 1px solid var(--border);
-  padding: 1.5rem 1rem;
+  background: var(--paper-raised);
+  border-right: 1px solid var(--rule);
+  padding: 2rem 1.1rem 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  transition: transform 0.25s ease;
+  gap: 0.35rem;
+  transition: transform 0.25s var(--ease);
 }
 
 .sidebar-title {
-  color: var(--text-primary);
-  font-size: 1rem;
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--ink);
+  font-size: 1.3rem;
   font-weight: 600;
-  letter-spacing: 0.3px;
-  padding: 0 0.5rem;
-  margin: 0 0 0.5rem;
+  letter-spacing: 0.2px;
+  padding: 0 0.4rem;
+  margin: 0 0 1.1rem;
 }
 
 .sidebar-divider {
   border: none;
-  border-top: 1px solid var(--border);
-  margin: 0.5rem 0;
+  border-top: 1px solid var(--rule);
+  margin: 0.85rem 0.4rem;
 }
 
-/* ===========================
-   GROUP BUTTONS
-   =========================== */
+/* =====================================================
+   GROUP BUTTONS — tabs in a planner, not nav pills
+   ===================================================== */
 
 .group-btn {
   width: 100%;
   border: none;
+  border-left: 2px solid transparent;
   background: transparent;
-  color: var(--text-dim);
-  padding: 10px 12px;
-  border-radius: var(--radius-md);
+  color: var(--ink-soft);
+  padding: 9px 12px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   cursor: pointer;
   text-align: left;
-  font-size: 14px;
-  font-family: inherit;
-  transition: background 0.15s, color 0.15s;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.02em;
+  transition: background 0.15s var(--ease), color 0.15s var(--ease), border-color 0.15s var(--ease);
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .group-btn:hover {
-  background: var(--bg-input);
-  color: var(--text-primary);
+  background: var(--pencil-wash);
+  color: var(--ink);
 }
 
 .group-btn.active {
-  background: var(--accent);
-  color: #fff;
+  background: var(--pencil-wash);
+  color: var(--pencil-deep);
+  border-left-color: var(--pencil);
+  font-weight: 600;
 }
 
-/* ===========================
+/* =====================================================
    GROUP ROW (with ⋯ menu)
-   =========================== */
+   ===================================================== */
 
 .group-row {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
   position: relative;
 }
 
@@ -121,156 +161,170 @@ html, body, #root {
 .menu-btn {
   background: transparent;
   border: none;
-  color: var(--text-muted);
+  color: var(--ink-faint);
   cursor: pointer;
-  font-size: 18px;
-  padding: 4px 6px;
+  font-size: 17px;
+  padding: 4px 7px;
   border-radius: var(--radius-sm);
   flex-shrink: 0;
   line-height: 1;
-  transition: color 0.15s;
+  transition: color 0.15s var(--ease), background 0.15s var(--ease);
 }
 
 .menu-btn:hover {
-  color: var(--text-primary);
+  color: var(--ink);
+  background: var(--rule);
 }
 
 .menu-dropdown {
   position: absolute;
   right: 0;
   top: calc(100% + 4px);
-  background: var(--bg-input);
-  border: 1px solid var(--border-hover);
+  background: var(--paper);
+  border: 1px solid var(--rule-strong);
   border-radius: var(--radius-md);
   padding: 4px;
   z-index: 50;
   min-width: 140px;
+  box-shadow: 0 6px 18px rgba(28, 25, 23, 0.12);
 }
 
 .menu-dropdown button {
   width: 100%;
   background: transparent;
   border: none;
-  color: var(--danger);
+  color: var(--terracotta);
   cursor: pointer;
-  padding: 8px 12px;
+  padding: 8px 11px;
   border-radius: var(--radius-sm);
   text-align: left;
-  font-size: 14px;
-  font-family: inherit;
+  font-family: var(--font-body);
+  font-size: 13.5px;
 }
 
 .menu-dropdown button:hover {
-  background: var(--bg-hover);
+  background: var(--terracotta-wash);
 }
 
-/* ===========================
+/* =====================================================
    ADD GROUP FORM
-   =========================== */
+   ===================================================== */
 
 .group-form {
   display: flex;
   gap: 6px;
-  margin-top: 0.5rem;
+  margin-top: 0.6rem;
+  padding: 0 0.1rem;
 }
 
 .group-form input {
   flex: 1;
-  padding: 9px 12px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border);
-  background: var(--bg-input);
-  color: var(--text-primary);
-  font-size: 13px;
-  font-family: inherit;
+  padding: 8px 11px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
   outline: none;
   min-width: 0;
+  transition: border-color 0.15s var(--ease);
 }
 
 .group-form input::placeholder {
-  color: var(--text-muted);
+  color: var(--ink-faint);
 }
 
 .group-form input:focus {
-  border-color: var(--accent);
+  border-color: var(--pencil);
 }
 
 .group-form button {
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   flex-shrink: 0;
-  border: none;
-  border-radius: var(--radius-md);
-  background: var(--accent);
-  color: #fff;
+  border: 1px solid var(--pencil);
+  border-radius: var(--radius-sm);
+  background: var(--pencil);
+  color: var(--paper);
   cursor: pointer;
-  font-size: 18px;
+  font-size: 17px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s;
+  transition: background 0.15s var(--ease), transform 0.1s var(--ease);
 }
 
 .group-form button:hover {
-  background: var(--accent-hover);
+  background: var(--pencil-deep);
 }
 
-/* ===========================
+.group-form button:active {
+  transform: scale(0.95);
+}
+
+/* =====================================================
    CONTENT AREA
-   =========================== */
+   ===================================================== */
 
 .content {
   flex: 1;
-  padding: 2rem;
+  padding: 2.75rem 3rem;
   min-width: 0;
+  max-width: 760px;
 }
 
 .content-header {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
   gap: 1rem;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 1rem;
 }
 
 .content-header h1 {
-  color: var(--text-primary);
-  font-size: 1.75rem;
+  font-family: var(--font-display);
+  color: var(--ink);
+  font-size: 1.85rem;
   font-weight: 600;
   margin: 0;
+  letter-spacing: -0.2px;
 }
 
-/* ===========================
-   QUICK-ADD BAR (inline on list page)
-   =========================== */
+/* =====================================================
+   QUICK-ADD BAR
+   ===================================================== */
 
 .quick-add-bar {
   display: flex;
-  gap: 10px;
-  margin-bottom: 1.5rem;
+  gap: 8px;
+  margin-bottom: 1.75rem;
   flex-wrap: wrap;
 }
 
 .quick-add-bar input,
 .quick-add-bar select {
-  padding: 11px 14px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border);
-  background: var(--bg-input);
-  color: var(--text-primary);
-  font-size: 14px;
-  font-family: inherit;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--rule);
+  background: var(--paper-raised);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14.5px;
   outline: none;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s var(--ease), background 0.15s var(--ease);
 }
 
 .quick-add-bar input::placeholder {
-  color: var(--text-muted);
+  color: var(--ink-faint);
 }
 
 .quick-add-bar input:focus,
 .quick-add-bar select:focus {
-  border-color: var(--accent);
+  border-color: var(--pencil);
+  background: var(--paper);
 }
 
 .quick-add-bar input.title-input {
@@ -278,73 +332,85 @@ html, body, #root {
   min-width: 180px;
 }
 
+.quick-add-bar select {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+
 .quick-add-bar select option {
-  background: var(--bg-card);
+  background: var(--paper);
 }
 
 .quick-add-bar button {
-  padding: 11px 20px;
-  border: none;
-  border-radius: var(--radius-md);
-  background: var(--accent);
-  color: #fff;
+  padding: 12px 22px;
+  border: 1px solid var(--pencil);
+  border-radius: var(--radius-sm);
+  background: var(--pencil);
+  color: var(--paper);
   font-size: 14px;
-  font-weight: 500;
-  font-family: inherit;
+  font-weight: 600;
+  font-family: var(--font-body);
   cursor: pointer;
-  transition: background 0.15s, transform 0.1s;
+  transition: background 0.15s var(--ease), transform 0.1s var(--ease);
   white-space: nowrap;
 }
 
 .quick-add-bar button:hover {
-  background: var(--accent-hover);
+  background: var(--pencil-deep);
 }
 
 .quick-add-bar button:active {
   transform: scale(0.98);
 }
 
-/* ===========================
-   TODO LIST
-   =========================== */
+/* =====================================================
+   TODO LIST — ruled lines, like a page
+   ===================================================== */
 
 .todo-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
 }
 
 .empty-state {
   text-align: center;
-  color: var(--text-muted);
-  padding: 3rem 0;
+  color: var(--ink-faint);
+  padding: 4rem 0;
   font-size: 15px;
+  font-family: var(--font-display);
+  font-style: italic;
 }
 
 .empty-state span {
   display: block;
-  font-size: 2rem;
+  font-size: 1.8rem;
   margin-bottom: 0.75rem;
+  font-style: normal;
 }
 
-/* ===========================
-   TODO ITEM
-   =========================== */
+/* =====================================================
+   TODO ITEM — a checklist line, not a card
+   ===================================================== */
 
 .todo {
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  padding: 14px 16px;
+  background: transparent;
+  border-radius: 0;
+  padding: 13px 6px;
   display: flex;
   align-items: center;
   gap: 14px;
-  border: 1px solid var(--border);
-  transition: border-color 0.15s, transform 0.15s;
+  border: none;
+  border-bottom: 1px solid var(--rule);
+  transition: background 0.15s var(--ease);
+}
+
+.todo:first-child {
+  border-top: 1px solid var(--rule);
 }
 
 .todo:hover {
-  border-color: var(--border-hover);
-  transform: translateY(-1px);
+  background: var(--paper-raised);
 }
 
 .todo-content {
@@ -353,87 +419,107 @@ html, body, #root {
 }
 
 .todo-title {
-  font-size: 15px;
-  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 15.5px;
+  color: var(--ink);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  position: relative;
+}
+
+/* strikethrough that "draws" across on completion, not a static line */
+.todo-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 1.5px;
+  width: 0;
+  background: var(--ink-faint);
+  transition: width 0.3s var(--ease) 0.05s;
 }
 
 .todo.done .todo-title {
-  text-decoration: line-through;
-  opacity: 0.4;
+  color: var(--ink-faint);
+}
+
+.todo.done .todo-title::after {
+  width: 100%;
 }
 
 .todo-meta {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-top: 3px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+  margin-top: 4px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
+  letter-spacing: 0.01em;
 }
 
 .meta-group {
-  background: var(--bg-input);
-  border-radius: 6px;
-  padding: 2px 8px;
-  font-size: 11px;
-  color: var(--text-dim);
+  background: var(--pencil-wash);
+  border-radius: var(--radius-sm);
+  padding: 2px 7px;
+  font-size: 10.5px;
+  color: var(--pencil-deep);
 }
 
-/* ===========================
+/* =====================================================
    ACTION BUTTONS
-   =========================== */
+   ===================================================== */
 
+/* hand-checked box, not a filled dot */
 .check-btn {
-  width: 28px;
-  height: 28px;
+  width: 22px;
+  height: 22px;
   flex-shrink: 0;
-  border: 2px solid var(--accent);
-  border-radius: 50%;
+  border: 1.5px solid var(--ink-soft);
+  border-radius: 3px;
   background: transparent;
-  color: var(--accent);
-  font-size: 14px;
+  color: transparent;
+  font-size: 13px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s, color 0.15s;
+  transition: border-color 0.15s var(--ease), background 0.15s var(--ease), transform 0.1s var(--ease);
 }
 
 .check-btn:hover {
-  background: var(--accent);
-  color: #fff;
+  border-color: var(--pencil);
+  transform: scale(1.05);
 }
 
 .todo.done .check-btn {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
+  background: var(--pencil);
+  border-color: var(--pencil);
+  color: var(--paper);
 }
 
 .delete-btn {
   border: none;
   background: transparent;
-  color: var(--text-muted);
-  font-size: 16px;
+  color: var(--ink-faint);
+  font-size: 15px;
   cursor: pointer;
   flex-shrink: 0;
-  padding: 4px;
+  padding: 5px;
   border-radius: var(--radius-sm);
-  transition: color 0.15s, background 0.15s;
+  transition: color 0.15s var(--ease), background 0.15s var(--ease);
   line-height: 1;
 }
 
 .delete-btn:hover {
-  color: var(--danger);
-  background: rgba(239, 68, 68, 0.1);
+  color: var(--terracotta);
+  background: var(--terracotta-wash);
 }
 
-/* ===========================
+/* =====================================================
    MOBILE BURGER
-   =========================== */
+   ===================================================== */
 
 .menu-toggle {
   display: none;
@@ -441,37 +527,38 @@ html, body, #root {
   top: 14px;
   left: 14px;
   z-index: 1000;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  color: var(--text-primary);
-  width: 42px;
-  height: 42px;
-  border-radius: var(--radius-md);
+  background: var(--paper);
+  border: 1px solid var(--rule-strong);
+  color: var(--ink);
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  font-size: 20px;
+  font-size: 18px;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 2px 8px rgba(28, 25, 23, 0.08);
 }
 
-/* ===========================
+/* =====================================================
    SIDEBAR OVERLAY
-   =========================== */
+   ===================================================== */
 
 .sidebar-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(28, 25, 23, 0.35);
   z-index: 998;
 }
 
-/* ===========================
+/* =====================================================
    ERROR BANNER
-   =========================== */
+   ===================================================== */
 
 .error-banner {
-  background: rgba(239, 68, 68, 0.12);
-  border: 1px solid rgba(239, 68, 68, 0.4);
-  color: #fca5a5;
+  background: var(--terracotta-wash);
+  border: 1px solid #E2BCAE;
+  color: #93412C;
   border-radius: var(--radius-md);
   padding: 12px 16px;
   margin-bottom: 1rem;
@@ -481,20 +568,22 @@ html, body, #root {
   gap: 10px;
 }
 
-/* ===========================
+/* =====================================================
    LOADING
-   =========================== */
+   ===================================================== */
 
 .loading {
   text-align: center;
-  color: var(--text-muted);
-  padding: 3rem 0;
+  color: var(--ink-faint);
+  padding: 4rem 0;
   font-size: 15px;
+  font-family: var(--font-display);
+  font-style: italic;
 }
 
-/* ===========================
-   TABLET (sidebar becomes drawer)
-   =========================== */
+/* =====================================================
+   TABLET — sidebar becomes a drawer
+   ===================================================== */
 
 @media (max-width: 900px) {
   .menu-toggle {
@@ -512,6 +601,7 @@ html, body, #root {
     height: 100%;
     z-index: 999;
     transform: translateX(-100%);
+    box-shadow: 4px 0 20px rgba(28, 25, 23, 0.15);
   }
 
   .sidebar.open {
@@ -519,18 +609,24 @@ html, body, #root {
   }
 
   .content {
-    padding: 1rem;
-    padding-top: 68px;
+    padding: 1.25rem 1.25rem 2rem;
+    padding-top: 72px;
+    max-width: 100%;
   }
 }
 
-/* ===========================
+/* =====================================================
    MOBILE
-   =========================== */
+   ===================================================== */
 
 @media (max-width: 600px) {
+  .content-header {
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.85rem;
+  }
+
   .content-header h1 {
-    font-size: 1.4rem;
+    font-size: 1.45rem;
   }
 
   .quick-add-bar {
@@ -544,7 +640,22 @@ html, body, #root {
   }
 
   .todo {
-    gap: 10px;
-    padding: 12px 14px;
+    gap: 11px;
+    padding: 14px 4px;
+  }
+
+  .todo-title {
+    font-size: 15px;
+  }
+
+  .check-btn {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media (max-width: 380px) {
+  .sidebar {
+    width: 86vw;
   }
 }
