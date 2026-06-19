@@ -1,33 +1,37 @@
-/* =====================================================
-   TOKENS
-   A paper ledger, not a dashboard. Warm, daylight, tactile.
-   ===================================================== */
 
 :root {
   /* color */
-  --paper:        #FAF7F0;
-  --paper-raised: #F2EDE0;
-  --ink:          #1C1917;
-  --ink-soft:     #57534E;
-  --ink-faint:    #A39E92;
-  --rule:         #DDD5C2;
-  --rule-strong:  #C7BCA1;
-  --pencil:       #8B6F47;
-  --pencil-deep:  #6B5436;
-  --pencil-wash:  #EFE6D3;
-  --terracotta:   #C4634A;
-  --terracotta-wash: #F5E3DD;
+  --bg-page:      #0A0A12;
+  --bg-sidebar:   #100E1B;
+  --bg-card:      #161420;
+  --bg-card-hover:#1C1929;
+  --bg-input:     #1A1726;
+  --bg-input-focus: #201C30;
+  --border:       #262236;
+  --border-hover: #383150;
 
-  /* type */
-  --font-display: 'Source Serif 4', 'Iowan Old Style', Georgia, serif;
-  --font-body:    'Source Serif 4', Georgia, serif;
-  --font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --text-primary: #ECE9F7;
+  --text-soft:    #B8B3CE;
+  --text-muted:   #756E8D;
+
+  --violet:       #7C5CFF;
+  --violet-deep:  #5E3FE0;
+  --violet-wash:  rgba(124, 92, 255, 0.14);
+
+  --blue:         #2F5CFF;
+  --blue-deep:    #1E3A8A;
+  --blue-wash:    rgba(47, 92, 255, 0.12);
+
+  --red:          #F0395C;
+  --red-deep:     #C42548;
+  --red-wash:     rgba(240, 57, 92, 0.13);
 
   /* shape */
-  --radius-sm: 4px;
-  --radius-md: 7px;
-  --radius-lg: 3px; /* deliberately near-square — paper, not app chrome */
-  --rail-w: 248px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --rail-w: 256px;
+  --header-h: 64px; 
 
   /* motion */
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
@@ -46,84 +50,83 @@ html, body, #root {
   height: 100%;
   margin: 0;
   padding: 0;
-  background: var(--paper);
-  color: var(--ink);
+  background: var(--bg-page);
+  color: var(--text-primary);
 }
 
 body {
-  font-family: var(--font-body);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: var(--pencil-wash);
-  color: var(--pencil-deep);
+  background: var(--violet-wash);
+  color: var(--text-primary);
 }
 
 :focus-visible {
-  outline: 2px solid var(--pencil);
+  outline: 2px solid var(--violet);
   outline-offset: 2px;
 }
 
-/* faint paper grain via layered gradient, no image asset needed */
 .app {
   display: flex;
   min-height: 100vh;
   background:
-    radial-gradient(circle at 1px 1px, rgba(28,25,23,0.035) 1px, transparent 0) 0 0/14px 14px,
-    var(--paper);
+    radial-gradient(circle at 12% 0%, rgba(124, 92, 255, 0.07), transparent 45%),
+    radial-gradient(circle at 88% 100%, rgba(47, 92, 255, 0.06), transparent 50%),
+    var(--bg-page);
 }
 
 /* =====================================================
-   SIDEBAR — the spine of the notebook
+   SIDEBAR
    ===================================================== */
 
 .sidebar {
   width: var(--rail-w);
   flex-shrink: 0;
-  background: var(--paper-raised);
-  border-right: 1px solid var(--rule);
-  padding: 2rem 1.1rem 1.5rem;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  padding: 1.5rem 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.4rem;
   transition: transform 0.25s var(--ease);
 }
 
 .sidebar-title {
-  font-family: var(--font-display);
-  font-style: italic;
-  color: var(--ink);
-  font-size: 1.3rem;
-  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 1.05rem;
+  font-weight: 700;
   letter-spacing: 0.2px;
-  padding: 0 0.4rem;
-  margin: 0 0 1.1rem;
+  padding: 0 0.5rem;
+  margin: 0 0 0.75rem;
+  background: linear-gradient(90deg, var(--text-primary), var(--violet) 130%);
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 .sidebar-divider {
   border: none;
-  border-top: 1px solid var(--rule);
-  margin: 0.85rem 0.4rem;
+  border-top: 1px solid var(--border);
+  margin: 0.6rem 0;
 }
 
 /* =====================================================
-   GROUP BUTTONS — tabs in a planner, not nav pills
+   GROUP BUTTONS
    ===================================================== */
 
 .group-btn {
   width: 100%;
-  border: none;
-  border-left: 2px solid transparent;
+  border: 1px solid transparent;
   background: transparent;
-  color: var(--ink-soft);
-  padding: 9px 12px;
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  color: var(--text-soft);
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
   cursor: pointer;
   text-align: left;
-  font-family: var(--font-mono);
-  font-size: 12.5px;
-  letter-spacing: 0.02em;
+  font-size: 14px;
+  font-family: inherit;
   transition: background 0.15s var(--ease), color 0.15s var(--ease), border-color 0.15s var(--ease);
   display: flex;
   align-items: center;
@@ -131,15 +134,16 @@ body {
 }
 
 .group-btn:hover {
-  background: var(--pencil-wash);
-  color: var(--ink);
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
 }
 
 .group-btn.active {
-  background: var(--pencil-wash);
-  color: var(--pencil-deep);
-  border-left-color: var(--pencil);
+  background: var(--violet-wash);
+  color: var(--text-primary);
+  border-color: rgba(124, 92, 255, 0.35);
   font-weight: 600;
+  box-shadow: inset 2px 0 0 var(--violet);
 }
 
 /* =====================================================
@@ -149,7 +153,7 @@ body {
 .group-row {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
   position: relative;
 }
 
@@ -161,10 +165,10 @@ body {
 .menu-btn {
   background: transparent;
   border: none;
-  color: var(--ink-faint);
+  color: var(--text-muted);
   cursor: pointer;
-  font-size: 17px;
-  padding: 4px 7px;
+  font-size: 18px;
+  padding: 4px 6px;
   border-radius: var(--radius-sm);
   flex-shrink: 0;
   line-height: 1;
@@ -172,38 +176,38 @@ body {
 }
 
 .menu-btn:hover {
-  color: var(--ink);
-  background: var(--rule);
+  color: var(--text-primary);
+  background: var(--bg-card-hover);
 }
 
 .menu-dropdown {
   position: absolute;
   right: 0;
   top: calc(100% + 4px);
-  background: var(--paper);
-  border: 1px solid var(--rule-strong);
+  background: var(--bg-input);
+  border: 1px solid var(--border-hover);
   border-radius: var(--radius-md);
   padding: 4px;
   z-index: 50;
-  min-width: 140px;
-  box-shadow: 0 6px 18px rgba(28, 25, 23, 0.12);
+  min-width: 150px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
 }
 
 .menu-dropdown button {
   width: 100%;
   background: transparent;
   border: none;
-  color: var(--terracotta);
+  color: var(--red);
   cursor: pointer;
-  padding: 8px 11px;
+  padding: 8px 12px;
   border-radius: var(--radius-sm);
   text-align: left;
-  font-family: var(--font-body);
-  font-size: 13.5px;
+  font-size: 14px;
+  font-family: inherit;
 }
 
 .menu-dropdown button:hover {
-  background: var(--terracotta-wash);
+  background: var(--red-wash);
 }
 
 /* =====================================================
@@ -213,42 +217,42 @@ body {
 .group-form {
   display: flex;
   gap: 6px;
-  margin-top: 0.6rem;
-  padding: 0 0.1rem;
+  margin-top: 0.5rem;
 }
 
 .group-form input {
   flex: 1;
-  padding: 8px 11px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--rule);
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: 12.5px;
+  padding: 9px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-family: inherit;
   outline: none;
   min-width: 0;
-  transition: border-color 0.15s var(--ease);
+  transition: border-color 0.15s var(--ease), background 0.15s var(--ease);
 }
 
 .group-form input::placeholder {
-  color: var(--ink-faint);
+  color: var(--text-muted);
 }
 
 .group-form input:focus {
-  border-color: var(--pencil);
+  border-color: var(--violet);
+  background: var(--bg-input-focus);
 }
 
 .group-form button {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   flex-shrink: 0;
-  border: 1px solid var(--pencil);
-  border-radius: var(--radius-sm);
-  background: var(--pencil);
-  color: var(--paper);
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--violet);
+  color: #fff;
   cursor: pointer;
-  font-size: 17px;
+  font-size: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -256,7 +260,7 @@ body {
 }
 
 .group-form button:hover {
-  background: var(--pencil-deep);
+  background: var(--violet-deep);
 }
 
 .group-form button:active {
@@ -269,28 +273,25 @@ body {
 
 .content {
   flex: 1;
-  padding: 2.75rem 3rem;
+  padding: 2rem 2.25rem;
   min-width: 0;
-  max-width: 760px;
 }
 
 .content-header {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.5rem;
   gap: 1rem;
-  border-bottom: 1px solid var(--rule);
-  padding-bottom: 1rem;
+  min-height: 40px;
 }
 
 .content-header h1 {
-  font-family: var(--font-display);
-  color: var(--ink);
-  font-size: 1.85rem;
-  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 1.75rem;
+  font-weight: 700;
   margin: 0;
-  letter-spacing: -0.2px;
+  letter-spacing: -0.3px;
 }
 
 /* =====================================================
@@ -299,32 +300,33 @@ body {
 
 .quick-add-bar {
   display: flex;
-  gap: 8px;
-  margin-bottom: 1.75rem;
+  gap: 10px;
+  margin-bottom: 1.5rem;
   flex-wrap: wrap;
 }
 
 .quick-add-bar input,
 .quick-add-bar select {
-  padding: 12px 14px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--rule);
-  background: var(--paper-raised);
-  color: var(--ink);
-  font-family: var(--font-body);
-  font-size: 14.5px;
+  padding: 11px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: inherit;
   outline: none;
   transition: border-color 0.15s var(--ease), background 0.15s var(--ease);
+  color-scheme: dark;
 }
 
 .quick-add-bar input::placeholder {
-  color: var(--ink-faint);
+  color: var(--text-muted);
 }
 
 .quick-add-bar input:focus,
 .quick-add-bar select:focus {
-  border-color: var(--pencil);
-  background: var(--paper);
+  border-color: var(--violet);
+  background: var(--bg-input-focus);
 }
 
 .quick-add-bar input.title-input {
@@ -332,32 +334,26 @@ body {
   min-width: 180px;
 }
 
-.quick-add-bar select {
-  font-family: var(--font-mono);
-  font-size: 12.5px;
-  color: var(--ink-soft);
-}
-
 .quick-add-bar select option {
-  background: var(--paper);
+  background: var(--bg-card);
 }
 
 .quick-add-bar button {
-  padding: 12px 22px;
-  border: 1px solid var(--pencil);
-  border-radius: var(--radius-sm);
-  background: var(--pencil);
-  color: var(--paper);
+  padding: 11px 22px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--violet), var(--blue));
+  color: #fff;
   font-size: 14px;
   font-weight: 600;
-  font-family: var(--font-body);
+  font-family: inherit;
   cursor: pointer;
-  transition: background 0.15s var(--ease), transform 0.1s var(--ease);
+  transition: filter 0.15s var(--ease), transform 0.1s var(--ease);
   white-space: nowrap;
 }
 
 .quick-add-bar button:hover {
-  background: var(--pencil-deep);
+  filter: brightness(1.1);
 }
 
 .quick-add-bar button:active {
@@ -365,52 +361,47 @@ body {
 }
 
 /* =====================================================
-   TODO LIST — ruled lines, like a page
+   TODO LIST
    ===================================================== */
 
 .todo-list {
   display: flex;
   flex-direction: column;
+  gap: 8px;
 }
 
 .empty-state {
   text-align: center;
-  color: var(--ink-faint);
-  padding: 4rem 0;
+  color: var(--text-muted);
+  padding: 3.5rem 0;
   font-size: 15px;
-  font-family: var(--font-display);
-  font-style: italic;
 }
 
 .empty-state span {
   display: block;
-  font-size: 1.8rem;
+  font-size: 2rem;
   margin-bottom: 0.75rem;
-  font-style: normal;
 }
 
 /* =====================================================
-   TODO ITEM — a checklist line, not a card
+   TODO ITEM
    ===================================================== */
 
 .todo {
-  background: transparent;
-  border-radius: 0;
-  padding: 13px 6px;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
   display: flex;
   align-items: center;
   gap: 14px;
-  border: none;
-  border-bottom: 1px solid var(--rule);
-  transition: background 0.15s var(--ease);
-}
-
-.todo:first-child {
-  border-top: 1px solid var(--rule);
+  border: 1px solid var(--border);
+  transition: border-color 0.15s var(--ease), background 0.15s var(--ease), transform 0.15s var(--ease);
 }
 
 .todo:hover {
-  background: var(--paper-raised);
+  border-color: var(--border-hover);
+  background: var(--bg-card-hover);
+  transform: translateY(-1px);
 }
 
 .todo-content {
@@ -419,136 +410,88 @@ body {
 }
 
 .todo-title {
-  font-family: var(--font-body);
-  font-size: 15.5px;
-  color: var(--ink);
+  font-size: 15px;
+  color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  position: relative;
 }
 
-/* strikethrough that "draws" across on completion, not a static line */
-.todo-title::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  height: 1.5px;
-  width: 0;
-  background: var(--ink-faint);
-  transition: width 0.3s var(--ease) 0.05s;
+.todo.done {
+  border-color: var(--border);
+  background: rgba(22, 20, 32, 0.5);
 }
 
 .todo.done .todo-title {
-  color: var(--ink-faint);
-}
-
-.todo.done .todo-title::after {
-  width: 100%;
+  text-decoration: line-through;
+  text-decoration-color: var(--violet);
+  opacity: 0.45;
 }
 
 .todo-meta {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--ink-faint);
-  margin-top: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 3px;
   display: flex;
   align-items: center;
-  gap: 7px;
-  letter-spacing: 0.01em;
+  gap: 6px;
 }
 
 .meta-group {
-  background: var(--pencil-wash);
-  border-radius: var(--radius-sm);
-  padding: 2px 7px;
-  font-size: 10.5px;
-  color: var(--pencil-deep);
+  background: var(--blue-wash);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 11px;
+  color: #8FA8FF;
 }
 
 /* =====================================================
    ACTION BUTTONS
    ===================================================== */
 
-/* hand-checked box, not a filled dot */
 .check-btn {
-  width: 22px;
-  height: 22px;
+  width: 28px;
+  height: 28px;
   flex-shrink: 0;
-  border: 1.5px solid var(--ink-soft);
-  border-radius: 3px;
+  border: 2px solid var(--violet);
+  border-radius: 50%;
   background: transparent;
-  color: transparent;
-  font-size: 13px;
+  color: var(--violet);
+  font-size: 14px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: border-color 0.15s var(--ease), background 0.15s var(--ease), transform 0.1s var(--ease);
+  transition: background 0.15s var(--ease), color 0.15s var(--ease), transform 0.1s var(--ease);
 }
 
 .check-btn:hover {
-  border-color: var(--pencil);
+  background: var(--violet-wash);
   transform: scale(1.05);
 }
 
 .todo.done .check-btn {
-  background: var(--pencil);
-  border-color: var(--pencil);
-  color: var(--paper);
+  background: linear-gradient(135deg, var(--violet), var(--blue));
+  color: #fff;
+  border-color: transparent;
 }
 
 .delete-btn {
   border: none;
   background: transparent;
-  color: var(--ink-faint);
-  font-size: 15px;
+  color: var(--text-muted);
+  font-size: 16px;
   cursor: pointer;
   flex-shrink: 0;
-  padding: 5px;
+  padding: 4px;
   border-radius: var(--radius-sm);
   transition: color 0.15s var(--ease), background 0.15s var(--ease);
   line-height: 1;
 }
 
 .delete-btn:hover {
-  color: var(--terracotta);
-  background: var(--terracotta-wash);
-}
-
-/* =====================================================
-   MOBILE BURGER
-   ===================================================== */
-
-.menu-toggle {
-  display: none;
-  position: fixed;
-  top: 14px;
-  left: 14px;
-  z-index: 1000;
-  background: var(--paper);
-  border: 1px solid var(--rule-strong);
-  color: var(--ink);
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-size: 18px;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(28, 25, 23, 0.08);
-}
-
-/* =====================================================
-   SIDEBAR OVERLAY
-   ===================================================== */
-
-.sidebar-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(28, 25, 23, 0.35);
-  z-index: 998;
+  color: var(--red);
+  background: var(--red-wash);
 }
 
 /* =====================================================
@@ -556,9 +499,9 @@ body {
    ===================================================== */
 
 .error-banner {
-  background: var(--terracotta-wash);
-  border: 1px solid #E2BCAE;
-  color: #93412C;
+  background: var(--red-wash);
+  border: 1px solid rgba(240, 57, 92, 0.35);
+  color: #FF8FA3;
   border-radius: var(--radius-md);
   padding: 12px 16px;
   margin-bottom: 1rem;
@@ -574,11 +517,43 @@ body {
 
 .loading {
   text-align: center;
-  color: var(--ink-faint);
-  padding: 4rem 0;
+  color: var(--text-muted);
+  padding: 3.5rem 0;
   font-size: 15px;
-  font-family: var(--font-display);
-  font-style: italic;
+}
+
+/* =====================================================
+   MOBILE BURGER + SIDEBAR OVERLAY
+   ===================================================== */
+
+/* Default (desktop): no reserved space needed, toggle is hidden */
+.menu-toggle {
+  display: none;
+  flex-shrink: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 18px;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s var(--ease), border-color 0.15s var(--ease);
+}
+
+.menu-toggle:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-hover);
+}
+
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 5, 10, 0.6);
+  backdrop-filter: blur(2px);
+  z-index: 998;
 }
 
 /* =====================================================
@@ -586,10 +561,6 @@ body {
    ===================================================== */
 
 @media (max-width: 900px) {
-  .menu-toggle {
-    display: flex;
-  }
-
   .app {
     flex-direction: column;
   }
@@ -601,17 +572,41 @@ body {
     height: 100%;
     z-index: 999;
     transform: translateX(-100%);
-    box-shadow: 4px 0 20px rgba(28, 25, 23, 0.15);
+    box-shadow: 8px 0 30px rgba(0, 0, 0, 0.5);
   }
 
   .sidebar.open {
     transform: translateX(0);
   }
 
+  /* The fix: the burger stays fixed/out-of-flow (it has to, since it's a
+     sibling of .sidebar and .content, not a child of .content-header), but
+     .content now reserves a dedicated top strip sized to the button, and the
+     title is pushed in from the left by that same amount. The button and the
+     title can never occupy the same pixels, on any width. */
   .content {
-    padding: 1.25rem 1.25rem 2rem;
-    padding-top: 72px;
-    max-width: 100%;
+    padding: calc(var(--header-h) + 1.5rem) 1.1rem 2rem;
+  }
+
+  .menu-toggle {
+    display: flex;
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 1000;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  }
+
+  .content-header {
+    flex-wrap: nowrap;
+  }
+
+  .content-header h1 {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
@@ -620,13 +615,8 @@ body {
    ===================================================== */
 
 @media (max-width: 600px) {
-  .content-header {
-    margin-bottom: 1.25rem;
-    padding-bottom: 0.85rem;
-  }
-
   .content-header h1 {
-    font-size: 1.45rem;
+    font-size: 1.35rem;
   }
 
   .quick-add-bar {
@@ -640,17 +630,8 @@ body {
   }
 
   .todo {
-    gap: 11px;
-    padding: 14px 4px;
-  }
-
-  .todo-title {
-    font-size: 15px;
-  }
-
-  .check-btn {
-    width: 24px;
-    height: 24px;
+    gap: 10px;
+    padding: 12px 14px;
   }
 }
 
