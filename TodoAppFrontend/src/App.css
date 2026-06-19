@@ -1,3 +1,8 @@
+/* =====================================================
+   TOKENS
+   Dark, late-night workspace: ink-blue ground, violet for
+   action, a single red ember for destructive actions.
+   ===================================================== */
 
 :root {
   /* color */
@@ -31,7 +36,7 @@
   --radius-md: 12px;
   --radius-lg: 16px;
   --rail-w: 256px;
-  --header-h: 64px; 
+  --header-h: 64px; /* button height (40px) + its 12px top offset + buffer */
 
   /* motion */
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
@@ -508,6 +513,7 @@ body {
   font-size: 14px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
 }
 
@@ -625,7 +631,8 @@ body {
 
   .quick-add-bar input,
   .quick-add-bar select,
-  .quick-add-bar button {
+  .quick-add-bar button,
+  .quick-add-bar .dt-field {
     width: 100%;
   }
 
@@ -639,4 +646,164 @@ body {
   .sidebar {
     width: 86vw;
   }
+}
+
+/* =====================================================
+   DATE INPUT — floating placeholder over a native
+   datetime-local field, since the placeholder attribute
+   is ignored by spec on this input type.
+   ===================================================== */
+
+.dt-field {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  width: 200px;
+}
+
+.dt-field .dt-input {
+  width: 100%;
+}
+
+/* While empty, hide the browser's own "mm/dd/yyyy --:--" glyphs so only
+   our floating label shows. Reappears the instant a value is set. */
+.dt-input[data-empty="true"]::-webkit-datetime-edit {
+  color: transparent;
+}
+
+.dt-placeholder {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 14px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* =====================================================
+   GROUP COUNT BADGE
+   ===================================================== */
+
+.group-count {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg-card-hover);
+  border-radius: 999px;
+  padding: 1px 7px;
+  flex-shrink: 0;
+}
+
+.group-btn.active .group-count {
+  color: var(--violet);
+  background: rgba(124, 92, 255, 0.18);
+}
+
+/* =====================================================
+   GROUP FORM — invalid-entry shake
+   ===================================================== */
+
+.group-form.shake input {
+  border-color: var(--red);
+  animation: shake 0.4s var(--ease);
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
+}
+
+/* =====================================================
+   ERROR BANNER — dismiss button
+   ===================================================== */
+
+.error-dismiss {
+  border: none;
+  background: transparent;
+  color: inherit;
+  opacity: 0.7;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  transition: opacity 0.15s var(--ease), background 0.15s var(--ease);
+}
+
+.error-dismiss:hover {
+  opacity: 1;
+  background: rgba(240, 57, 92, 0.18);
+}
+
+/* =====================================================
+   TODO — per-row pending state, overdue state, inline edit
+   ===================================================== */
+
+.todo.pending {
+  opacity: 0.65;
+}
+
+.todo.pending .todo-title {
+  cursor: default;
+}
+
+.todo.overdue {
+  border-color: rgba(240, 57, 92, 0.35);
+}
+
+.meta-overdue {
+  color: var(--red);
+  font-weight: 600;
+}
+
+.todo-title {
+  cursor: text;
+  border-radius: 4px;
+  transition: background 0.15s var(--ease);
+}
+
+.todo-title:hover {
+  background: rgba(124, 92, 255, 0.08);
+}
+
+.todo-edit-input {
+  width: 100%;
+  background: var(--bg-input-focus);
+  border: 1px solid var(--violet);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 15px;
+  font-family: inherit;
+  padding: 3px 7px;
+  margin: -3px -7px;
+  outline: none;
+}
+
+/* =====================================================
+   SPINNER — per-row loading indicator on check-btn
+   ===================================================== */
+
+.spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+.check-btn:disabled,
+.delete-btn:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
