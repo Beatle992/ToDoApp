@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-const API = 'http://100.90.164.103:5000/api/todos'
+const API = 'http://100.90.164.103:5000/api'
 
 async function apiFetch(url, options = {}) {
   const res = await fetch(url, {
